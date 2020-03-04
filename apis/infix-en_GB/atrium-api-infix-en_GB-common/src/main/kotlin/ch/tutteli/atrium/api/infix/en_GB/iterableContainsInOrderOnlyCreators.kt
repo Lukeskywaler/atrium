@@ -1,5 +1,6 @@
-package ch.tutteli.atrium.api.fluent.en_GB
+package ch.tutteli.atrium.api.infix.en_GB
 
+import ch.tutteli.atrium.creating.AssertionPlant
 import ch.tutteli.atrium.creating.Expect
 import ch.tutteli.atrium.domain.builders.ExpectImpl
 import ch.tutteli.atrium.domain.builders.creating.basic.contains.addAssertion
@@ -23,28 +24,24 @@ import ch.tutteli.kbox.glue
  * @return The [Expect] for which the assertion was built to support a fluent API.
  * @throws AssertionError Might throw an [AssertionError] if the assertion made is not correct.
  */
-fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.value(expected: E): Expect<T> =
-    values(expected)
+infix fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.value(expected: E): Expect<T> =
+    this the Values(expected)
 
 /**
  * Finishes the specification of the sophisticated `contains` assertion where the [Iterable] needs to contain only the
- * [expected] value as well as the [otherExpected] values
- * (if given) in the specified order.
+ * expected [values] in the specified order.
  *
  * Note that we might change the signature of this function with the next version
  * which will cause a binary backward compatibility break (see
  * [#292](https://github.com/robstoll/atrium/issues/292) for more information)
  *
- * @param expected The value which is expected to be contained within the [Iterable].
- * @param otherExpected Additional values which are expected to be contained within [Iterable].
+ * @param values The nullable values which are expected to be contained within the [Iterable].
  *
- * @return The [Expect] for which the assertion was built to support a fluent API.
+ * @return The [AssertionPlant] for which the assertion was built to support a fluent API.
  * @throws AssertionError Might throw an [AssertionError] if the assertion made is not correct.
  */
-fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.values(
-    expected: E,
-    vararg otherExpected: E
-): Expect<T> = addAssertion(ExpectImpl.iterable.contains.valuesInOrderOnly(this, expected glue otherExpected))
+infix fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.the(values: Values<E>): Expect<T> =
+    addAssertion(ExpectImpl.iterable.contains.valuesInOrderOnly(this, values.toList()))
 
 /**
  * Finishes the specification of the sophisticated `contains` assertion where the [Iterable] needs to contain only a
@@ -64,36 +61,33 @@ fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.values(
  * @return The [Expect] for which the assertion was built to support a fluent API.
  * @throws AssertionError Might throw an [AssertionError] if the assertion made is not correct.
  */
-fun <E : Any, T : Iterable<E?>> Builder<E?, T, InOrderOnlySearchBehaviour>.entry(
+infix fun <E : Any, T : Iterable<E?>> Builder<E?, T, InOrderOnlySearchBehaviour>.entry(
     assertionCreatorOrNull: (Expect<E>.() -> Unit)?
-): Expect<T> = entries(assertionCreatorOrNull)
+): Expect<T> = this the Entries(assertionCreatorOrNull)
 
 /**
  * Finishes the specification of the sophisticated `contains` assertion where the [Iterable] needs to contain only an
- * entry which holds all assertions [assertionCreatorOrNull] creates or is `null` in case [assertionCreatorOrNull]
+ * entry which holds all assertions [entries].[assertionCreatorOrNull][Entries.assertionCreatorOrNull]
+ * might create or is `null` in case [entries].[assertionCreatorOrNull][Entries.otherAssertionCreatorsOrNulls]
  * is defined as `null` and likewise a further entry for each
- * [otherAssertionCreatorsOrNulls] (if given) whereas the entries have to appear in the specified order.
+ * [entries].[otherAssertionCreatorsOrNulls][Entries.otherAssertionCreatorsOrNulls]
+ * (if given) whereas the entries have to appear in the specified order.
  *
  * Note that we might change the signature of this function with the next version
  * which will cause a binary backward compatibility break (see
  * [#292](https://github.com/robstoll/atrium/issues/292) for more information)
  *
- * @param assertionCreatorOrNull The identification lambda which creates the assertions which the entry we are looking
- *   for has to hold; or in other words, the function which defines whether an entry is the one we are looking for
- *   or not. In case it is defined as `null`, then an entry is identified if it is `null` as well.
- * @param otherAssertionCreatorsOrNulls Additional identification lambdas which each identify (separately) an entry
- *   which we are looking for (see [assertionCreatorOrNull] for more information).
+ * @param entries The parameter object containing the identification lambdas.
  *
  * @return The [Expect] for which the assertion was built to support a fluent API.
  * @throws AssertionError Might throw an [AssertionError] if the assertion made is not correct.
  */
-fun <E : Any, T : Iterable<E?>> Builder<E?, T, InOrderOnlySearchBehaviour>.entries(
-    assertionCreatorOrNull: (Expect<E>.() -> Unit)?,
-    vararg otherAssertionCreatorsOrNulls: (Expect<E>.() -> Unit)?
+infix fun <E : Any, T : Iterable<E?>> Builder<E?, T, InOrderOnlySearchBehaviour>.the(
+    entries: Entries<E>
 ): Expect<T> = addAssertion(
     ExpectImpl.iterable.contains.entriesInOrderOnly(
         this,
-        assertionCreatorOrNull glue otherAssertionCreatorsOrNulls
+        entries.toList()
     )
 )
 
@@ -114,11 +108,11 @@ fun <E : Any, T : Iterable<E?>> Builder<E?, T, InOrderOnlySearchBehaviour>.entri
  * @throws AssertionError Might throw an [AssertionError] if the assertion made is not correct.
  * @throws IllegalArgumentException in case the given [expectedIterable] does not have elements (is empty).
  *
- * @since 0.9.0
+ * @since 0.10.0
  */
-inline fun <reified E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.elementsOf(
+inline infix fun <reified E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.elementsOf(
     expectedIterable: Iterable<E>
 ): Expect<T> {
     val (first, rest) = toVarArg(expectedIterable)
-    return values(first, *rest)
+    return this the Values(first, *rest)
 }

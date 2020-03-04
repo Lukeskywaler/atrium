@@ -1,9 +1,8 @@
-package ch.tutteli.atrium.api.fluent.en_GB
+package ch.tutteli.atrium.api.infix.en_GB
 
 import ch.tutteli.atrium.domain.builders.ExpectImpl
 import ch.tutteli.atrium.domain.creating.iterable.contains.IterableContains.Builder
 import ch.tutteli.atrium.domain.creating.iterable.contains.searchbehaviours.*
-import kotlin.jvm.JvmName
 
 /**
  * Defines that the search behaviour "find entries `in any order` in the [Iterable]" shall be applied to this
@@ -11,8 +10,8 @@ import kotlin.jvm.JvmName
  *
  * @return The newly created builder.
  */
-val <E, T : Iterable<E>> Builder<E, T, NoOpSearchBehaviour>.inAnyOrder
-    get() = ExpectImpl.iterable.contains.searchBehaviours.inAnyOrder(this)
+infix fun <E, T : Iterable<E>> Builder<E, T, NoOpSearchBehaviour>.inAny(@Suppress("UNUSED_PARAMETER") order: order) =
+    ExpectImpl.iterable.contains.searchBehaviours.inAnyOrder(this)
 
 /**
  * Defines that the constraint "`only` the specified entries exist in the [Iterable]" shall be applied to this
@@ -20,9 +19,8 @@ val <E, T : Iterable<E>> Builder<E, T, NoOpSearchBehaviour>.inAnyOrder
  *
  * @return The newly created builder.
  */
-val <E, T : Iterable<E>> Builder<E, T, InAnyOrderSearchBehaviour>.only
-    @JvmName("butOnly")
-    get() = ExpectImpl.iterable.contains.searchBehaviours.inAnyOrderOnly(this)
+infix fun <E, T : Iterable<E>> Builder<E, T, InAnyOrderSearchBehaviour>.but(@Suppress("UNUSED_PARAMETER") only: only) =
+    ExpectImpl.iterable.contains.searchBehaviours.inAnyOrderOnly(this)
 
 
 /**
@@ -31,8 +29,8 @@ val <E, T : Iterable<E>> Builder<E, T, InAnyOrderSearchBehaviour>.only
  *
  * @return The newly created builder.
  */
-val <E, T : Iterable<E>> Builder<E, T, NoOpSearchBehaviour>.inOrder
-    get() = ExpectImpl.iterable.contains.searchBehaviours.inOrder(this)
+infix fun <E, T : Iterable<E>> Builder<E, T, NoOpSearchBehaviour>.inGiven(@Suppress("UNUSED_PARAMETER") order: order) =
+    ExpectImpl.iterable.contains.searchBehaviours.inOrder(this)
 
 /**
  * Defines that the constraint "`only` the specified entries exist in the [Iterable]" shall be applied to this
@@ -40,9 +38,8 @@ val <E, T : Iterable<E>> Builder<E, T, NoOpSearchBehaviour>.inOrder
  *
  * @return The newly created builder.
  */
-val <E, T : Iterable<E>> Builder<E, T, InOrderSearchBehaviour>.only
-    @JvmName("andOnly")
-    get() = ExpectImpl.iterable.contains.searchBehaviours.inOrderOnly(this)
+infix fun <E, T : Iterable<E>> Builder<E, T, InOrderSearchBehaviour>.and(@Suppress("UNUSED_PARAMETER") only: only) =
+    ExpectImpl.iterable.contains.searchBehaviours.inOrderOnly(this)
 
 /**
  * Defines that the [Iterable] contains `in order only` groups of entries
@@ -50,13 +47,14 @@ val <E, T : Iterable<E>> Builder<E, T, InOrderSearchBehaviour>.only
  *
  * @return The newly created builder.
  */
-val <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.grouped
-    get() = ExpectImpl.iterable.contains.searchBehaviours.inOrderOnlyGrouped(this)
+infix fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlySearchBehaviour>.grouped(@Suppress("UNUSED_PARAMETER") entries: entries) =
+    ExpectImpl.iterable.contains.searchBehaviours.inOrderOnlyGrouped(this)
 
 /**
  * A filler word to emphasis that the next step defines the order within expected groups of values.
  *
  * @return The newly created builder.
  */
-val <E, T : Iterable<E>> Builder<E, T, InOrderOnlyGroupedSearchBehaviour>.within
-    get() = ExpectImpl.iterable.contains.searchBehaviours.inOrderOnlyGroupedWithin(this)
+infix fun <E, T : Iterable<E>> Builder<E, T, InOrderOnlyGroupedSearchBehaviour>.within(@Suppress("UNUSED_PARAMETER") group: group) =
+    ExpectImpl.iterable.contains.searchBehaviours.inOrderOnlyGroupedWithin(this)
+
